@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <language_definitions>
-  <language processor="8051"
-            endian="big"
-            size="16"
+  <language processor="ASMedia 8051"
+            endian="little"
+            instructionEndian="big"
+            size="24"
             variant="default"
-            version="2.0"
+            version="0.1"
             slafile="8051.sla"
             processorspec="8051.pspec"
 		manualindexfile="../manuals/8051.idx"
-            id="8051:BE:16:default">
-    <description>8051 Microcontroller Family</description>
+            id="ASMedia-8051:LE:24:default">
+    <description>ASMedia's 8051-based processor core</description>
     <compiler name="default" spec="8051.cspec" id="default"/>
     <compiler name="Archimedes" spec="8051_archimedes.cspec" id="Archimedes"/>
-    <external_name tool="IDA-PRO" name="8051"/>
   </language>
 </language_definitions>
