@@ -81,7 +81,7 @@ public class ASMedia8051Loader extends AbstractLibrarySupportLoader {
 				int chunkSize = Math.min(0x4000, (int)(fileSize - offsetInFile));
 
 				MemoryBlock bank = mem.createInitializedBlock("BANK_" + i, api.toAddr("CODE:0xC000"),
-					provider.getInputStream(offsetInFile), chunkSize, monitor, true);
+					provider.getInputStream(offsetInFile), chunkSize, monitor, i > 0);
 				bank.setPermissions(true, false, true);
 				bank.setVolatile(false);
 				bank.setSourceName(provider.getName() + formatAddressRange(offsetInFile, chunkSize));
