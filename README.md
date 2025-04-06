@@ -3,6 +3,10 @@
 ASMedia's 8051-based chips sometimes have expanded CODE / XDATA space, and the firmware that runs on these chips often has code constructs that are difficult for Ghidra to understand.
 This processor module is an attempt at making it easier to disassemble and decompile that firmware.
 
+> [!CAUTION]
+> This module is a work-in-progress and has not gone through any rigorous testing.
+> In particular, the behavior of the CODE bank switching needs to be verified against real hadware, and the binary loader is not yet able to handle different firmware image types (raw binary vs. flash image) or allow the user to specify the chip type (bank-switched vs. non-bank-switched).
+
 Target features of this processor module include:
 
 - Seamlessly handle the expanded CODE and XDATA address spaces through handling of the `DPX` and `PSBANK` SFRs.
