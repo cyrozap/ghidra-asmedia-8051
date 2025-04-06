@@ -14,7 +14,7 @@ define endian=big;
 
 define alignment=1;
 
-@define PTRSIZE 3
+@define PTRSIZE 2
 
 #  SP stack pointer should be set to the size of the space it is used in, to avoid "issues"
 #  This is a minor inconsistency with the model and the actual processor in some cases
@@ -22,7 +22,7 @@ define alignment=1;
 #
 @define SP_SIZE 1
 
-define space CODE     type=ram_space      size=3  default;
+define space CODE     type=ram_space      size=$(PTRSIZE)  default;
 define space INTMEM   type=ram_space      size=1;
 define space EXTMEM   type=ram_space      size=3;
 define space SFR      type=ram_space      size=1;
@@ -240,7 +240,7 @@ Areg:    "A"     is ophi             { export ACC; }
 ABreg:   AB      is ophi & AB   	 { export AB; }
 DPTRreg: DPTR    is ophi & DPTR      { export DPTR; }
 
-ADPTR:   "@A+"^DPTR is ophi & DPTR		{ ptr:$(PTRSIZE) = (zext(DPX) << 16) | (zext(DPTR) + zext(ACC)); export ptr; }
+ADPTR:   "@A+"^DPTR is ophi & DPTR		{ ptr:$(PTRSIZE) = zext(DPTR) + zext(ACC); export ptr; }
 
 APC:     "@A+PC"    is epsilon			{ tmp:$(PTRSIZE) = inst_next + zext(ACC); export tmp; }
 
@@ -290,8 +290,8 @@ BitByteAddr: B 			is bitbank=1 & sfrbyte=0x1E & sfrbit & B { export B; }
 BitByteAddr: PSW 	    is bitbank=1 & sfrbyte=0x1A & sfrbit & PSW { export PSW; }
 BitByteAddr: byteaddr 	is bitbank=0 & lowbyte & sfrbit [ byteaddr = lowbyte + 0x20; ] { export *[INTMEM]:1 byteaddr; }
 
-Addr11: relAddr is aopaddr & adata [ relAddr = (PSBANK << 16) | (inst_next $and 0xf800)+(aopaddr*256)+adata; ]  { export *:1 relAddr; }
-Addr16: absAddr is addr16 [ absAddr = (PSBANK << 16) | addr16; ] { export *:1 absAddr; }
+Addr11: relAddr is aopaddr & adata [ relAddr =(inst_next $and 0xf800)+(aopaddr*256)+adata; ]  { export *:1 relAddr; }
+Addr16: addr16 is addr16 { export *:1 addr16; }
 
 Rel8:   relAddr is rel8		     [ relAddr=inst_next+rel8; ]      { export *:1 relAddr; }
 Rel16:   relAddr is rel16		     [ relAddr=inst_next+rel16; ] { export *:1 relAddr; }
