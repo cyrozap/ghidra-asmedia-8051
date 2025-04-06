@@ -16,3 +16,4 @@ Target features of this processor module include:
 Known issues:
 
 - LJMP / LCALL appear to ignore the value of PSBANK, even when set manually, and seem to want to jump back to the common bank.
+- The default symbols / labels are no longer being applied to the loaded binary.
