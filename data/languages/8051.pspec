@@ -47,7 +47,7 @@
     <symbol name="BANK3_R6" address="INTMEM:1e"/>
     <symbol name="BANK3_R7" address="INTMEM:1f"/>
   
-    <symbol name="P0" address="SFR:80"/>
+    <symbol name="HARD_COPY_CTRL" address="SFR:80"/>
     		<symbol name="SP" address="SFR:81"/>
 		    <symbol name="DPL" address="SFR:82"/>
 		    <symbol name="DPH" address="SFR:83"/>
@@ -58,14 +58,23 @@
     <symbol name="TL1" address="SFR:8b"/>
     <symbol name="TH0" address="SFR:8c"/>
     <symbol name="TH1" address="SFR:8d"/>
-    <symbol name="P1" address="SFR:90"/>
+    <symbol name="MISC_CTRL" address="SFR:90"/>
     <symbol name="DPX" address="SFR:93"/>
+    <symbol name="PSBANK" address="SFR:96"/>
     <symbol name="SCON" address="SFR:98"/>
     <symbol name="SBUF" address="SFR:99"/>
+    <symbol name="HARD_COPY_SRC" address="SFR:9a"/>
+    <symbol name="HARD_COPY_DST" address="SFR:9c"/>
+    <symbol name="HARD_COPY_LEN_LO" address="SFR:9e"/>
     <symbol name="P2" address="SFR:a0"/>
+    <symbol name="VEC_CONST" address="SFR:a2"/>
+    <symbol name="VEC_LEN" address="SFR:a4"/>
+    <symbol name="VEC_OFFSET" address="SFR:a6"/>
     <symbol name="IE" address="SFR:a8"/>
     <symbol name="P3" address="SFR:b0"/>
+    <symbol name="VEC_ADDR" address="SFR:b4"/>
     <symbol name="IP" address="SFR:b8"/>
+    <symbol name="HARD_COPY_DATA" address="SFR:c0"/>
     <symbol name="PSW" address="SFR:d0"/>
     			<symbol name="ACC" address="SFR:e0"/>
     			<symbol name="B" address="SFR:f0"/>
@@ -199,14 +208,14 @@
     <symbol name="2f.6" address="BITS:7e"/>
     <symbol name="2f.7" address="BITS:7f"/>
     
-    <symbol name="P0.0" address="BITS:80"/>
-    <symbol name="P0.1" address="BITS:81"/>
-    <symbol name="P0.2" address="BITS:82"/>
-    <symbol name="P0.3" address="BITS:83"/>
-    <symbol name="P0.4" address="BITS:84"/>
-    <symbol name="P0.5" address="BITS:85"/>
-    <symbol name="P0.6" address="BITS:86"/>
-    <symbol name="P0.7" address="BITS:87"/>
+    <symbol name="HARD_COPY_CTRL.0" address="BITS:80"/>
+    <symbol name="HARD_COPY_CTRL.1" address="BITS:81"/>
+    <symbol name="HARD_COPY_CTRL.2" address="BITS:82"/>
+    <symbol name="HARD_COPY_CTRL.3" address="BITS:83"/>
+    <symbol name="HARD_COPY_CTRL.4" address="BITS:84"/>
+    <symbol name="HARD_COPY_CTRL.5" address="BITS:85"/>
+    <symbol name="HARD_COPY_CTRL.6" address="BITS:86"/>
+    <symbol name="HARD_COPY_CTRL.7" address="BITS:87"/>
     <symbol name="IT0" address="BITS:88"/>
     <symbol name="IE0" address="BITS:89"/>
     <symbol name="IT1" address="BITS:8a"/>
@@ -215,14 +224,14 @@
     <symbol name="TF0" address="BITS:8d"/>
     <symbol name="TR1" address="BITS:8e"/>
     <symbol name="TF1" address="BITS:8f"/>
-    <symbol name="P1.0" address="BITS:90"/>
-    <symbol name="P1.1" address="BITS:91"/>
-    <symbol name="P1.2" address="BITS:92"/>
-    <symbol name="P1.3" address="BITS:93"/>
-    <symbol name="P1.4" address="BITS:94"/>
-    <symbol name="P1.5" address="BITS:95"/>
-    <symbol name="P1.6" address="BITS:96"/>
-    <symbol name="P1.7" address="BITS:97"/>
+    <symbol name="MISC_CTRL.VEC_N_ADD_SUB" address="BITS:90"/>
+    <symbol name="MISC_CTRL.1" address="BITS:91"/>
+    <symbol name="MISC_CTRL.2" address="BITS:92"/>
+    <symbol name="MISC_CTRL.3" address="BITS:93"/>
+    <symbol name="MISC_CTRL.VEC_STATUS" address="BITS:94"/>
+    <symbol name="MISC_CTRL.VEC_SUB_N_ADD" address="BITS:95"/>
+    <symbol name="MISC_CTRL.VEC_START" address="BITS:96"/>
+    <symbol name="MISC_CTRL.HARD_COPY_START" address="BITS:97"/>
     <symbol name="RI" address="BITS:98"/>
     <symbol name="TI" address="BITS:99"/>
     <symbol name="RB8" address="BITS:9a"/>
@@ -263,22 +272,22 @@
     <symbol name="PT2" address="BITS:bd"/>
     <symbol name="PC" address="BITS:be"/>
     <symbol name="IP.7" address="BITS:bf"/>
-    <symbol name="C0.0" address="BITS:c0"/>
-    <symbol name="C0.1" address="BITS:c1"/>
-    <symbol name="C0.2" address="BITS:c2"/>
-    <symbol name="C0.3" address="BITS:c3"/>
-    <symbol name="C0.4" address="BITS:c4"/>
-    <symbol name="C0.5" address="BITS:c5"/>
-    <symbol name="C0.6" address="BITS:c6"/>
-    <symbol name="C0.7" address="BITS:c7"/>
-    <symbol name="C8.0" address="BITS:c8"/>
-    <symbol name="C8.1" address="BITS:c9"/>
-    <symbol name="C8.2" address="BITS:ca"/>
-    <symbol name="C8.3" address="BITS:cb"/>
-    <symbol name="C8.4" address="BITS:cc"/>
-    <symbol name="C8.5" address="BITS:cd"/>
-    <symbol name="C8.6" address="BITS:ce"/>
-    <symbol name="C8.7" address="BITS:cf"/>
+    <symbol name="HARD_COPY_DATA[0].0" address="BITS:c0"/>
+    <symbol name="HARD_COPY_DATA[0].1" address="BITS:c1"/>
+    <symbol name="HARD_COPY_DATA[0].2" address="BITS:c2"/>
+    <symbol name="HARD_COPY_DATA[0].3" address="BITS:c3"/>
+    <symbol name="HARD_COPY_DATA[0].4" address="BITS:c4"/>
+    <symbol name="HARD_COPY_DATA[0].5" address="BITS:c5"/>
+    <symbol name="HARD_COPY_DATA[0].6" address="BITS:c6"/>
+    <symbol name="HARD_COPY_DATA[0].7" address="BITS:c7"/>
+    <symbol name="HARD_COPY_DATA[8].0" address="BITS:c8"/>
+    <symbol name="HARD_COPY_DATA[8].1" address="BITS:c9"/>
+    <symbol name="HARD_COPY_DATA[8].2" address="BITS:ca"/>
+    <symbol name="HARD_COPY_DATA[8].3" address="BITS:cb"/>
+    <symbol name="HARD_COPY_DATA[8].4" address="BITS:cc"/>
+    <symbol name="HARD_COPY_DATA[8].5" address="BITS:cd"/>
+    <symbol name="HARD_COPY_DATA[8].6" address="BITS:ce"/>
+    <symbol name="HARD_COPY_DATA[8].7" address="BITS:cf"/>
     <symbol name="P" address="BITS:d0"/>
     <symbol name="UD" address="BITS:d1"/>
     <symbol name="OV" address="BITS:d2"/>
