@@ -24,7 +24,7 @@ import java.util.*;
 import ghidra.app.util.Option;
 import ghidra.app.util.bin.ByteProvider;
 import ghidra.app.util.importer.MessageLog;
-import ghidra.app.util.opinion.AbstractLibrarySupportLoader;
+import ghidra.app.util.opinion.AbstractProgramWrapperLoader;
 import ghidra.app.util.opinion.LoadSpec;
 import ghidra.framework.store.LockException;
 import ghidra.program.flatapi.FlatProgramAPI;
@@ -38,7 +38,7 @@ import ghidra.program.model.mem.MemoryConflictException;
 import ghidra.util.exception.CancelledException;
 import ghidra.util.task.TaskMonitor;
 
-public class ASMedia8051Loader extends AbstractLibrarySupportLoader {
+public class ASMedia8051Loader extends AbstractProgramWrapperLoader {
 
 	@Override
 	public String getName() {
