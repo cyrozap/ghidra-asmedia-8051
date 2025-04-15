@@ -106,4 +106,9 @@ public class ASMedia8051Loader extends AbstractProgramWrapperLoader {
 	private static String formatAddressRange(long start, long length) {
 		return String.format("[0x%x, 0x%x]", start, length);
 	}
+
+	@Override
+	public boolean shouldApplyProcessorLabelsByDefault() {
+		return true;
+	}
 }
