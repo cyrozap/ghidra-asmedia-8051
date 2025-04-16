@@ -19,10 +19,12 @@
 package asmedia8051;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import ghidra.app.util.MemoryBlockUtils;
 import ghidra.app.util.Option;
+import ghidra.app.util.OptionUtils;
 import ghidra.app.util.bin.ByteProvider;
 import ghidra.app.util.importer.MessageLog;
 import ghidra.app.util.opinion.AbstractProgramWrapperLoader;
@@ -45,7 +47,7 @@ import ghidra.util.task.TaskMonitor;
 public class ASMedia8051Loader extends AbstractProgramWrapperLoader {
 
 	private final static String FIRMWARE_TYPE_OPTION_NAME = "Firmware Type";
-	private final static ASMediaFirmwareType FIRMWARE_TYPE_OPTION_DEFAULT = ASMediaFirmwareType.RAW;
+	private final static ASMediaFirmwareType FIRMWARE_TYPE_OPTION_DEFAULT = ASMediaFirmwareType.AUTO;
 
 	@Override
 	public String getName() {
@@ -61,11 +63,51 @@ public class ASMedia8051Loader extends AbstractProgramWrapperLoader {
 		return loadSpecs;
 	}
 
+	private static long readLongFromBytesLe(byte[] bytes) {
+		long value = 0;
+		for (int i = 0; i < bytes.length; i++) {
+			value |= (bytes[i] & 0xFFL) << (8 * i);
+		}
+		return value;
+	}
+
+	private void loadFlashImage(ByteProvider provider, Program program, TaskMonitor monitor, MessageLog log)
+			throws CancelledException, IOException {
+		long bodyOffset = readLongFromBytesLe(provider.readBytes(4, 2)) + 5;
+
+		byte[] headerMagic = provider.readBytes(6, 10);
+
+		long codeLenSize = 4;
+		if (Arrays.equals(headerMagic, "U2104_RCFG".getBytes(StandardCharsets.US_ASCII)) ||
+				Arrays.equals(headerMagic, "2104B_RCFG".getBytes(StandardCharsets.US_ASCII)) ||
+				Arrays.equals(headerMagic, "2114A_RCFG".getBytes(StandardCharsets.US_ASCII))) {
+			codeLenSize = 2;
+		}
+
+		long codeLen = readLongFromBytesLe(provider.readBytes(bodyOffset, codeLenSize));
+		long offset = bodyOffset + codeLenSize;
+
+		loadRawBinary(provider, offset, codeLen, program, monitor, log);
+	}
+
+	private void loadPromontoryImage(ByteProvider provider, Program program, TaskMonitor monitor, MessageLog log)
+			throws CancelledException, IOException {
+		long codeLen = readLongFromBytesLe(provider.readBytes(4, 4));
+		codeLen -= codeLen & 0xff;  // Exclude the signature, if present
+
+		loadRawBinary(provider, 12, codeLen, program, monitor, log);
+	}
+
 	private void loadRawBinary(ByteProvider provider, Program program, TaskMonitor monitor, MessageLog log)
 			throws CancelledException, IOException {
+		loadRawBinary(provider, 0, provider.length(), program, monitor, log);
+	}
+
+	private void loadRawBinary(ByteProvider provider, long offset, long length,
+			Program program, TaskMonitor monitor, MessageLog log) throws CancelledException, IOException {
 		Memory mem = program.getMemory();
 		FlatProgramAPI api = new FlatProgramAPI(program);
-		FileBytes fileBytes = MemoryBlockUtils.createFileBytes(program, provider, monitor);
+		FileBytes fileBytes = MemoryBlockUtils.createFileBytes(program, provider, offset, length, monitor);
 
 		long fileSize = fileBytes.getSize();
 
@@ -111,7 +153,40 @@ public class ASMedia8051Loader extends AbstractProgramWrapperLoader {
 	protected void load(ByteProvider provider, LoadSpec loadSpec, List<Option> options,
 			Program program, TaskMonitor monitor, MessageLog log)
 			throws CancelledException, IOException {
-		loadRawBinary(provider, program, monitor, log);
+		boolean hasPromontoryMagic = false;
+		if (provider.length() >= 4) {
+			byte[] pt_magic = provider.readBytes(0, 4);
+			hasPromontoryMagic = Arrays.equals(pt_magic, "_PT_".getBytes(StandardCharsets.US_ASCII));
+		}
+
+		boolean hasRcfgMagic = false;
+		if (provider.length() >= 16) {
+			byte[] rcfg_magic = provider.readBytes(11, 5);
+			hasRcfgMagic = Arrays.equals(rcfg_magic, "_RCFG".getBytes(StandardCharsets.US_ASCII));
+		}
+
+		ASMediaFirmwareType firmwareType = OptionUtils.getOption(FIRMWARE_TYPE_OPTION_NAME, options, FIRMWARE_TYPE_OPTION_DEFAULT);
+		switch (firmwareType) {
+			case ASMediaFirmwareType.AUTO, ASMediaFirmwareType.IMAGE -> {
+				if (hasPromontoryMagic) {
+					// Promontory image
+					log.appendMsg("Detected firmware type: Promontory");
+					loadPromontoryImage(provider, program, monitor, log);
+				} else if (hasRcfgMagic) {
+					// Regular flash image
+					log.appendMsg("Detected firmware type: Flash Image");
+					loadFlashImage(provider, program, monitor, log);
+				} else {
+					// Raw binary
+					if (firmwareType == ASMediaFirmwareType.IMAGE) {
+						throw new IOException("Binary is not a valid firmware image.");
+					}
+					log.appendMsg("Detected firmware type: Raw Binary");
+					loadRawBinary(provider, program, monitor, log);
+				}
+			}
+			case ASMediaFirmwareType.RAW -> loadRawBinary(provider, program, monitor, log);
+		}
 	}
 
 	@Override
@@ -134,11 +209,6 @@ public class ASMedia8051Loader extends AbstractProgramWrapperLoader {
 				if (name.equals(FIRMWARE_TYPE_OPTION_NAME)) {
 					if (!ASMediaFirmwareType.class.isAssignableFrom(option.getValueClass())) {
 						return "Invalid type for option: " + name + " - " + option.getValueClass();
-					}
-
-					// FIXME: Remove this check once flash images are supported.
-					if (option.getValue() != ASMediaFirmwareType.RAW) {
-						return "Invalid Firmware Type: Only Raw Binaries are supported at this time.";
 					}
 				}
 			}
