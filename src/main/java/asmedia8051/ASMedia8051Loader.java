@@ -122,7 +122,11 @@ public class ASMedia8051Loader extends AbstractProgramWrapperLoader {
 			com.setVolatile(false);
 
 			// Remaining bytes in 0x4000 chunks
-			int bankCount = (int)((fileSize - firstChunkSize) / 0x4000);
+			long remainingSize = fileSize - firstChunkSize;
+			int bankCount = (int)(remainingSize / 0x4000);
+			if (remainingSize % 0x4000 > 0) {
+				bankCount += 1;
+			}
 			long offsetInFile = firstChunkSize;
 			for(int i = 0; i < bankCount; i++) {
 				int chunkSize = Math.min(0x4000, (int)(fileSize - offsetInFile));
