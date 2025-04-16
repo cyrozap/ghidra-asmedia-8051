@@ -27,6 +27,8 @@ import ghidra.app.util.bin.ByteProvider;
 import ghidra.app.util.importer.MessageLog;
 import ghidra.app.util.opinion.AbstractProgramWrapperLoader;
 import ghidra.app.util.opinion.LoadSpec;
+import ghidra.app.util.opinion.Loader;
+import ghidra.framework.model.DomainObject;
 import ghidra.framework.store.LockException;
 import ghidra.program.database.mem.FileBytes;
 import ghidra.program.flatapi.FlatProgramAPI;
@@ -41,6 +43,9 @@ import ghidra.util.exception.CancelledException;
 import ghidra.util.task.TaskMonitor;
 
 public class ASMedia8051Loader extends AbstractProgramWrapperLoader {
+
+	private final static String FIRMWARE_TYPE_OPTION_NAME = "Firmware Type";
+	private final static ASMediaFirmwareType FIRMWARE_TYPE_OPTION_DEFAULT = ASMediaFirmwareType.RAW;
 
 	@Override
 	public String getName() {
@@ -102,6 +107,39 @@ public class ASMedia8051Loader extends AbstractProgramWrapperLoader {
 		} catch (AddressOverflowException | LockException | MemoryConflictException e) {
 			log.appendException(e);
 		}
+	}
+
+	@Override
+	public List<Option> getDefaultOptions(ByteProvider provider, LoadSpec loadSpec,
+			DomainObject domainObject, boolean isLoadIntoProgram) {
+		List<Option> list =
+			super.getDefaultOptions(provider, loadSpec, domainObject, isLoadIntoProgram);
+
+		list.add(new ASMediaFirmwareTypeOption(FIRMWARE_TYPE_OPTION_NAME, FIRMWARE_TYPE_OPTION_DEFAULT,
+			Loader.COMMAND_LINE_ARG_PREFIX + "-firmwareType"));
+
+		return list;
+	}
+
+	@Override
+	public String validateOptions(ByteProvider provider, LoadSpec loadSpec, List<Option> options, Program program) {
+		if (options != null) {
+			for (Option option : options) {
+				String name = option.getName();
+				if (name.equals(FIRMWARE_TYPE_OPTION_NAME)) {
+					if (!ASMediaFirmwareType.class.isAssignableFrom(option.getValueClass())) {
+						return "Invalid type for option: " + name + " - " + option.getValueClass();
+					}
+
+					// FIXME: Remove this check once flash images are supported.
+					if (option.getValue() != ASMediaFirmwareType.RAW) {
+						return "Invalid Firmware Type: Only Raw Binaries are supported at this time.";
+					}
+				}
+			}
+		}
+
+		return super.validateOptions(provider, loadSpec, options, program);
 	}
 
 	@Override
