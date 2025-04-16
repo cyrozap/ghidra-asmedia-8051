@@ -21,12 +21,14 @@ package asmedia8051;
 import java.io.IOException;
 import java.util.*;
 
+import ghidra.app.util.MemoryBlockUtils;
 import ghidra.app.util.Option;
 import ghidra.app.util.bin.ByteProvider;
 import ghidra.app.util.importer.MessageLog;
 import ghidra.app.util.opinion.AbstractProgramWrapperLoader;
 import ghidra.app.util.opinion.LoadSpec;
 import ghidra.framework.store.LockException;
+import ghidra.program.database.mem.FileBytes;
 import ghidra.program.flatapi.FlatProgramAPI;
 import ghidra.program.model.address.Address;
 import ghidra.program.model.address.AddressOverflowException;
@@ -60,8 +62,9 @@ public class ASMedia8051Loader extends AbstractProgramWrapperLoader {
 			throws CancelledException, IOException {
 		Memory mem = program.getMemory();
 		FlatProgramAPI api = new FlatProgramAPI(program);
+		FileBytes fileBytes = MemoryBlockUtils.createFileBytes(program, provider, monitor);
 
-		long fileSize = provider.length();
+		long fileSize = fileBytes.getSize();
 
 		try {
 			// Load the CODE blocks
@@ -69,10 +72,9 @@ public class ASMedia8051Loader extends AbstractProgramWrapperLoader {
 			// First 0xC000 bytes are the common bank
 			int firstChunkSize = Math.min(0xC000, (int)fileSize);
 			MemoryBlock com = mem.createInitializedBlock("BANK_COM", api.toAddr("CODE:0x0000"),
-				provider.getInputStream(0), firstChunkSize, monitor, false);
+				fileBytes, 0, firstChunkSize, false);
 			com.setPermissions(true, false, true);
 			com.setVolatile(false);
-			com.setSourceName(provider.getName() + formatAddressRange(0, firstChunkSize));
 
 			// Remaining bytes in 0x4000 chunks
 			int bankCount = (int)((fileSize - firstChunkSize) / 0x4000);
@@ -81,10 +83,9 @@ public class ASMedia8051Loader extends AbstractProgramWrapperLoader {
 				int chunkSize = Math.min(0x4000, (int)(fileSize - offsetInFile));
 
 				MemoryBlock bank = mem.createInitializedBlock("BANK_" + i, api.toAddr("CODE:0xC000"),
-					provider.getInputStream(offsetInFile), chunkSize, monitor, i > 0);
+					fileBytes, offsetInFile, chunkSize, i > 0);
 				bank.setPermissions(true, false, true);
 				bank.setVolatile(false);
-				bank.setSourceName(provider.getName() + formatAddressRange(offsetInFile, chunkSize));
 
 				offsetInFile += chunkSize;
 			}
@@ -101,10 +102,6 @@ public class ASMedia8051Loader extends AbstractProgramWrapperLoader {
 		} catch (AddressOverflowException | LockException | MemoryConflictException e) {
 			log.appendException(e);
 		}
-	}
-
-	private static String formatAddressRange(long start, long length) {
-		return String.format("[0x%x, 0x%x]", start, length);
 	}
 
 	@Override
