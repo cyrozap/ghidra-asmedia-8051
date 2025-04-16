@@ -149,7 +149,7 @@ public class ASMedia8051Loader extends AbstractProgramWrapperLoader {
 			mmio.setVolatile(true);
 
 		} catch (AddressOverflowException | LockException | MemoryConflictException e) {
-			log.appendException(e);
+			throw new IOException(e);
 		}
 	}
 
