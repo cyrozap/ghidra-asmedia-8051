@@ -61,9 +61,7 @@ public class ASMedia8051Loader extends AbstractProgramWrapperLoader {
 		return loadSpecs;
 	}
 
-	@Override
-	protected void load(ByteProvider provider, LoadSpec loadSpec, List<Option> options,
-			Program program, TaskMonitor monitor, MessageLog log)
+	private void loadRawBinary(ByteProvider provider, Program program, TaskMonitor monitor, MessageLog log)
 			throws CancelledException, IOException {
 		Memory mem = program.getMemory();
 		FlatProgramAPI api = new FlatProgramAPI(program);
@@ -107,6 +105,13 @@ public class ASMedia8051Loader extends AbstractProgramWrapperLoader {
 		} catch (AddressOverflowException | LockException | MemoryConflictException e) {
 			log.appendException(e);
 		}
+	}
+
+	@Override
+	protected void load(ByteProvider provider, LoadSpec loadSpec, List<Option> options,
+			Program program, TaskMonitor monitor, MessageLog log)
+			throws CancelledException, IOException {
+		loadRawBinary(provider, program, monitor, log);
 	}
 
 	@Override
