@@ -95,8 +95,8 @@ public class ASMedia8051Loader extends AbstractProgramWrapperLoader {
 
 	private void loadPromontoryImage(ByteProvider provider, Program program, TaskMonitor monitor, MessageLog log)
 			throws CancelledException, IOException {
-		long codeLen = readLongFromBytesLe(provider.readBytes(4, 4));
-		codeLen -= codeLen & 0xff;  // Exclude the signature, if present
+		long bodyLen = readLongFromBytesLe(provider.readBytes(4, 4)) - 12;
+		long codeLen = bodyLen - (bodyLen & 0xff);  // Exclude the signature, if present
 
 		loadRawBinary(provider, 12, codeLen, program, monitor, log);
 	}
