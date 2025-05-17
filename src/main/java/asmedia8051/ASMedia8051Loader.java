@@ -61,7 +61,10 @@ public class ASMedia8051Loader extends AbstractProgramWrapperLoader {
 	public Collection<LoadSpec> findSupportedLoadSpecs(ByteProvider provider) throws IOException {
 		List<LoadSpec> loadSpecs = new ArrayList<>();
 
-		loadSpecs.add(new LoadSpec(this, 0, new LanguageCompilerSpecPair("ASMedia-8051:LE:24:default", "default"), true));
+		String fileName = provider.getName();
+		if (fileName != null && fileName.endsWith(".bin")) {
+			loadSpecs.add(new LoadSpec(this, 0, new LanguageCompilerSpecPair("ASMedia-8051:LE:24:default", "default"), true));
+		}
 
 		return loadSpecs;
 	}
