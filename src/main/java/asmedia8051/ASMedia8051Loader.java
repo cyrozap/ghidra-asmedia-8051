@@ -75,6 +75,11 @@ public class ASMedia8051Loader extends AbstractProgramWrapperLoader {
 
 		byte[] headerMagic = provider.readBytes(6, 10);
 
+		String asciiString = ASMediaUtils.bytesToAsciiString(headerMagic);
+		String hexString = ASMediaUtils.bytesToHexString(headerMagic);
+
+		log.appendMsg("Detected platform: " + asciiString + " (" + hexString + ")");
+
 		long codeLenSize = 4;
 		if (Arrays.equals(headerMagic, "U2104_RCFG".getBytes(StandardCharsets.US_ASCII)) ||
 				Arrays.equals(headerMagic, "2104B_RCFG".getBytes(StandardCharsets.US_ASCII)) ||

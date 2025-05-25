@@ -26,4 +26,28 @@ public class ASMediaUtils {
 		}
 		return value;
 	}
+
+	public static String bytesToAsciiString(byte[] bytes) {
+		StringBuilder asciiBuilder = new StringBuilder();
+		for (byte b : bytes) {
+			if (b >= 32 && b <= 126) {
+				// ASCII printable characters range
+				asciiBuilder.append((char) b);
+			} else {
+				// Unprintable characters
+				asciiBuilder.append('.');
+			}
+		}
+		String asciiString = asciiBuilder.toString();
+		return asciiString;
+	}
+
+	public static String bytesToHexString(byte[] bytes) {
+		StringBuilder hexBuilder = new StringBuilder();
+		for (byte b : bytes) {
+			hexBuilder.append(String.format("%02X ", b & 0xFF));
+		}
+		String hexString = hexBuilder.toString().trim();
+		return hexString;
+	}
 }
