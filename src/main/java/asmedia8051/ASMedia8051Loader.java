@@ -69,17 +69,9 @@ public class ASMedia8051Loader extends AbstractProgramWrapperLoader {
 		return loadSpecs;
 	}
 
-	private static long readLongFromBytesLe(byte[] bytes) {
-		long value = 0;
-		for (int i = 0; i < bytes.length; i++) {
-			value |= (bytes[i] & 0xFFL) << (8 * i);
-		}
-		return value;
-	}
-
 	private void loadFlashImage(ByteProvider provider, Program program, TaskMonitor monitor, MessageLog log)
 			throws CancelledException, IOException {
-		long bodyOffset = readLongFromBytesLe(provider.readBytes(4, 2)) + 5;
+		long bodyOffset = ASMediaUtils.readLongFromBytesLe(provider.readBytes(4, 2)) + 5;
 
 		byte[] headerMagic = provider.readBytes(6, 10);
 
@@ -90,7 +82,7 @@ public class ASMedia8051Loader extends AbstractProgramWrapperLoader {
 			codeLenSize = 2;
 		}
 
-		long codeLen = readLongFromBytesLe(provider.readBytes(bodyOffset, codeLenSize));
+		long codeLen = ASMediaUtils.readLongFromBytesLe(provider.readBytes(bodyOffset, codeLenSize));
 		long offset = bodyOffset + codeLenSize;
 
 		loadRawBinary(provider, offset, codeLen, program, monitor, log);
@@ -98,7 +90,7 @@ public class ASMedia8051Loader extends AbstractProgramWrapperLoader {
 
 	private void loadPromontoryImage(ByteProvider provider, Program program, TaskMonitor monitor, MessageLog log)
 			throws CancelledException, IOException {
-		long bodyLen = readLongFromBytesLe(provider.readBytes(4, 4)) - 12;
+		long bodyLen = ASMediaUtils.readLongFromBytesLe(provider.readBytes(4, 4)) - 12;
 		long codeLen = bodyLen - (bodyLen & 0xff);  // Exclude the signature, if present
 
 		loadRawBinary(provider, 12, codeLen, program, monitor, log);
