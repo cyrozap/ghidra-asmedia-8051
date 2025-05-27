@@ -19,7 +19,7 @@
 package asmedia8051;
 
 public class ASMediaUtils {
-	public static long readLongFromBytesLe(byte[] bytes) {
+	public static long littleEndianToLong(byte[] bytes) {
 		long value = 0;
 		for (int i = 0; i < bytes.length; i++) {
 			value |= (bytes[i] & 0xFFL) << (8 * i);
@@ -27,7 +27,7 @@ public class ASMediaUtils {
 		return value;
 	}
 
-	public static String bytesToAsciiString(byte[] bytes) {
+	public static String toAscii(byte[] bytes) {
 		StringBuilder asciiBuilder = new StringBuilder();
 		for (byte b : bytes) {
 			if (b >= 32 && b <= 126) {
@@ -42,7 +42,7 @@ public class ASMediaUtils {
 		return asciiString;
 	}
 
-	public static String bytesToHexString(byte[] bytes) {
+	public static String toHex(byte[] bytes) {
 		StringBuilder hexBuilder = new StringBuilder();
 		for (byte b : bytes) {
 			hexBuilder.append(String.format("%02X ", b & 0xFF));

@@ -71,12 +71,12 @@ public class ASMedia8051Loader extends AbstractProgramWrapperLoader {
 
 	private void loadFlashImage(ByteProvider provider, Program program, TaskMonitor monitor, MessageLog log)
 			throws CancelledException, IOException {
-		long bodyOffset = ASMediaUtils.readLongFromBytesLe(provider.readBytes(4, 2)) + 5;
+		long bodyOffset = ASMediaUtils.littleEndianToLong(provider.readBytes(4, 2)) + 5;
 
 		byte[] headerMagic = provider.readBytes(6, 10);
 
-		String asciiString = ASMediaUtils.bytesToAsciiString(headerMagic);
-		String hexString = ASMediaUtils.bytesToHexString(headerMagic);
+		String asciiString = ASMediaUtils.toAscii(headerMagic);
+		String hexString = ASMediaUtils.toHex(headerMagic);
 
 		log.appendMsg("Detected platform: " + asciiString + " (" + hexString + ")");
 
@@ -87,7 +87,7 @@ public class ASMedia8051Loader extends AbstractProgramWrapperLoader {
 			codeLenSize = 2;
 		}
 
-		long codeLen = ASMediaUtils.readLongFromBytesLe(provider.readBytes(bodyOffset, codeLenSize));
+		long codeLen = ASMediaUtils.littleEndianToLong(provider.readBytes(bodyOffset, codeLenSize));
 		long offset = bodyOffset + codeLenSize;
 
 		loadRawBinary(provider, offset, codeLen, program, monitor, log);
@@ -95,7 +95,7 @@ public class ASMedia8051Loader extends AbstractProgramWrapperLoader {
 
 	private void loadPromontoryImage(ByteProvider provider, Program program, TaskMonitor monitor, MessageLog log)
 			throws CancelledException, IOException {
-		long bodyLen = ASMediaUtils.readLongFromBytesLe(provider.readBytes(4, 4)) - 12;
+		long bodyLen = ASMediaUtils.littleEndianToLong(provider.readBytes(4, 4)) - 12;
 		long codeLen = bodyLen - (bodyLen & 0xff);  // Exclude the signature, if present
 
 		loadRawBinary(provider, 12, codeLen, program, monitor, log);
