@@ -18,9 +18,25 @@
 
 package asmedia8051;
 
+/**
+ * Enumerates the supported firmware types for ASMedia 8051 firmware binaries.
+ * Used to determine how the firmware binary should be parsed and loaded.
+ */
 public enum ASMediaFirmwareType {
+
+	/**
+	 * Automatically detect the firmware type based on file content.
+	 */
 	AUTO("Detect Automatically"),
+
+	/**
+	 * A firmware image with a structured layout (e.g., Promontory or RCFG format).
+	 */
 	IMAGE("Flash Image"),
+
+	/**
+	 * A raw binary file with no structured firmware header.
+	 */
 	RAW("Raw Binary");
 
 	private final String description;

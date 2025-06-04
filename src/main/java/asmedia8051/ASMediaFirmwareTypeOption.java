@@ -24,8 +24,19 @@ import javax.swing.JComboBox;
 import ghidra.app.util.Option;
 import ghidra.program.model.address.AddressFactory;
 
+/**
+ * A custom UI option for selecting the ASMedia firmware type during binary loading.
+ * Provides a dropdown menu for users to choose between firmware types.
+ */
 public class ASMediaFirmwareTypeOption extends Option {
 
+	/**
+	 * Constructs a new firmware type option with the given name, default value, and command-line argument.
+	 *
+	 * @param name the name of the option
+	 * @param defaultValue the default firmware type
+	 * @param arg the command-line argument used to specify this option
+	 */
 	public ASMediaFirmwareTypeOption(String name, ASMediaFirmwareType defaultValue, String arg) {
 		super(name, defaultValue, ASMediaFirmwareType.class, arg);
 	}

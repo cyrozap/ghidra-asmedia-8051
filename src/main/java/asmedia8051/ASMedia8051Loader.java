@@ -47,6 +47,10 @@ import ghidra.program.model.mem.MemoryConflictException;
 import ghidra.util.exception.CancelledException;
 import ghidra.util.task.TaskMonitor;
 
+/**
+ * A loader for ASMedia 8051 firmware images. This class handles the parsing and memory layout
+ * of firmware binaries based on detected firmware types (e.g., Promontory, Flash Image, or Raw Binary).
+ */
 public class ASMedia8051Loader extends AbstractProgramWrapperLoader {
 
 	private final static String FIRMWARE_TYPE_OPTION_NAME = "Firmware Type";

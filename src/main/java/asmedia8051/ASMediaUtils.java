@@ -18,7 +18,17 @@
 
 package asmedia8051;
 
+/**
+ * Utility class for common operations such as byte array conversion to ASCII, hex, and little-endian longs.
+ */
 public class ASMediaUtils {
+
+	/**
+	 * Converts a byte array to a long, assuming little-endian byte order.
+	 *
+	 * @param bytes the byte array to convert
+	 * @return the resulting long value
+	 */
 	public static long littleEndianToLong(byte[] bytes) {
 		long value = 0;
 		for (int i = 0; i < bytes.length; i++) {
@@ -27,6 +37,13 @@ public class ASMediaUtils {
 		return value;
 	}
 
+	/**
+	 * Converts a byte array to a string of ASCII characters.
+	 * Unprintable characters are represented as '.'.
+	 *
+	 * @param bytes the byte array to convert
+	 * @return the resulting ASCII string
+	 */
 	public static String toAscii(byte[] bytes) {
 		StringBuilder asciiBuilder = new StringBuilder();
 		for (byte b : bytes) {
@@ -42,6 +59,13 @@ public class ASMediaUtils {
 		return asciiString;
 	}
 
+	/**
+	 * Converts a byte array to a hexadecimal string.
+	 * Each byte is represented as two hex digits, separated by spaces.
+	 *
+	 * @param bytes the byte array to convert
+	 * @return the resulting hex string
+	 */
 	public static String toHex(byte[] bytes) {
 		StringBuilder hexBuilder = new StringBuilder();
 		for (byte b : bytes) {
