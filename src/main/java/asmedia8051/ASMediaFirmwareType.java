@@ -32,7 +32,7 @@ public enum ASMediaFirmwareType {
 	/**
 	 * A firmware image with a structured layout (e.g., Promontory or RCFG format).
 	 */
-	IMAGE("Flash Image"),
+	IMAGE("Flash or Promontory Image"),
 
 	/**
 	 * A raw binary file with no structured firmware header.
