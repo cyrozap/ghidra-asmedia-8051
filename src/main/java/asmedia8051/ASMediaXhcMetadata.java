@@ -163,4 +163,21 @@ public class ASMediaXhcMetadata {
 		return CHIP_METADATA.getOrDefault(new ByteArrayKey(platformIdBytes), DEFAULT_CHIP_METADATA);
 	}
 
+	private static final Map<ByteArrayKey, Integer> HEADER_MAGIC_TO_CODE_LEN_SIZE = Map.ofEntries(
+		Map.entry(new ByteArrayKey("U2104_RCFG"), 2),
+		Map.entry(new ByteArrayKey("2104B_RCFG"), 2),
+		Map.entry(new ByteArrayKey("2114A_RCFG"), 2)
+	);
+
+	/**
+	 * Returns the code length size for the given ROM config platform ID bytes.
+	 * Defaults to 4 if no match is found.
+	 *
+	 * @param platformIdBytes the platform ID bytes to look up
+	 * @return the code length size
+	 */
+	public static int getCodeLenSize(byte[] platformIdBytes) {
+		return HEADER_MAGIC_TO_CODE_LEN_SIZE.getOrDefault(new ByteArrayKey(platformIdBytes), 4);
+	}
+
 }

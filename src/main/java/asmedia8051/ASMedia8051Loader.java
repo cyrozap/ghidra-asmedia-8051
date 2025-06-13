@@ -84,12 +84,7 @@ public class ASMedia8051Loader extends AbstractProgramWrapperLoader {
 
 		log.appendMsg("Platform detected from ROM config: " + asciiString + " (" + hexString + ")");
 
-		long codeLenSize = 4;
-		if (Arrays.equals(headerMagic, "U2104_RCFG".getBytes(StandardCharsets.US_ASCII)) ||
-				Arrays.equals(headerMagic, "2104B_RCFG".getBytes(StandardCharsets.US_ASCII)) ||
-				Arrays.equals(headerMagic, "2114A_RCFG".getBytes(StandardCharsets.US_ASCII))) {
-			codeLenSize = 2;
-		}
+		long codeLenSize = ASMediaXhcMetadata.getCodeLenSize(headerMagic);
 
 		long codeLen = ASMediaUtils.littleEndianToLong(provider.readBytes(bodyOffset, codeLenSize));
 		long offset = bodyOffset + codeLenSize;
