@@ -145,7 +145,7 @@ public class ASMedia8051Loader extends AbstractProgramWrapperLoader {
 			byte[] platformIdBytes = provider.readBytes(offset + 0x87, 8);
 
 			// Lookup chip metadata
-			ASMediaXhcMetadata.ChipMetadata metadata = ASMediaXhcMetadata.get(platformIdBytes);
+			ASMediaXhcMetadata.FwChipMetadata metadata = ASMediaXhcMetadata.get(platformIdBytes);
 
 			// Tell the user what platform was detected
 			String platformIdString = ASMediaUtils.toAscii(platformIdBytes);

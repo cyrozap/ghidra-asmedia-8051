@@ -59,7 +59,7 @@ public class ASMediaXhcMetadata {
 	 * @param name the name of the chip (e.g., "ASM1042", "Promontory")
 	 * @param regions a list of memory regions defined for this chip
 	 */
-	public record ChipMetadata(String name, List<MemoryRegion> regions) {}
+	public record FwChipMetadata(String name, List<MemoryRegion> regions) {}
 
 	/**
 	 * Represents a memory region with a name, base address, and size.
@@ -70,7 +70,7 @@ public class ASMediaXhcMetadata {
 	 */
 	public record MemoryRegion(String name, long baseAddress, long size) {}
 
-	private static final ChipMetadata DEFAULT_CHIP_METADATA = new ChipMetadata(
+	private static final FwChipMetadata DEFAULT_FW_CHIP_METADATA = new FwChipMetadata(
 		"UNKNOWN",
 		List.of(
 			new MemoryRegion("XRAM", 0x000000, 0x10000),
@@ -78,38 +78,38 @@ public class ASMediaXhcMetadata {
 		)
 	);
 
-	private static final Map<ByteArrayKey, ChipMetadata> CHIP_METADATA = Map.ofEntries(
+	private static final Map<ByteArrayKey, FwChipMetadata> FW_CHIP_METADATA = Map.ofEntries(
 		Map.entry(
 			new ByteArrayKey(new byte[]{0, 0, 0, 0, 0, 0, 0, 0}),
-			new ChipMetadata("ASM1042", List.of(
+			new FwChipMetadata("ASM1042", List.of(
 				new MemoryRegion("XRAM", 0x0000, 0xC000),
 				new MemoryRegion("MMIO", 0xE000, 0x2000)
 			))
 		),
 		Map.entry(
 			new ByteArrayKey("2104B_FW"),
-			new ChipMetadata("ASM1042A", List.of(
+			new FwChipMetadata("ASM1042A", List.of(
 				new MemoryRegion("XRAM", 0x0000, 0xC000),
 				new MemoryRegion("MMIO", 0xE000, 0x2000)
 			))
 		),
 		Map.entry(
 			new ByteArrayKey("2114A_FW"),
-			new ChipMetadata("ASM1142", List.of(
+			new FwChipMetadata("ASM1142", List.of(
 				new MemoryRegion("XRAM", 0x0000, 0xC000),
 				new MemoryRegion("MMIO", 0xE000, 0x2000)
 			))
 		),
 		Map.entry(
 			new ByteArrayKey("2214A_FW"),
-			new ChipMetadata("ASM2142/ASM3142", List.of(
+			new FwChipMetadata("ASM2142/ASM3142", List.of(
 				new MemoryRegion("XRAM", 0x000000, 0x0C000),
 				new MemoryRegion("MMIO", 0x010000, 0x10000)
 			))
 		),
 		Map.entry(
 			new ByteArrayKey("2324A_FW"),
-			new ChipMetadata("ASM3242", List.of(
+			new FwChipMetadata("ASM3242", List.of(
 				/* FIXME: Assumed size of XRAM, need to confirm on real hardware */
 				new MemoryRegion("XRAM", 0x000000, 0x10000),
 				new MemoryRegion("MMIO", 0x010000, 0x10000)
@@ -117,7 +117,7 @@ public class ASMediaXhcMetadata {
 		),
 		Map.entry(
 			new ByteArrayKey("3306A_FW"),
-			new ChipMetadata("Promontory", List.of(
+			new FwChipMetadata("Promontory", List.of(
 				/* FIXME: Assumed layout, need to confirm on real hardware */
 				new MemoryRegion("XRAM",      0x000000, 0x10000),
 				new MemoryRegion("MMIO_USB",  0x010000, 0x10000),
@@ -126,7 +126,7 @@ public class ASMediaXhcMetadata {
 		),
 		Map.entry(
 			new ByteArrayKey("3306B_FW"),
-			new ChipMetadata("Promontory-LP", List.of(
+			new FwChipMetadata("Promontory-LP", List.of(
 				/* FIXME: Assumed layout, need to confirm on real hardware */
 				new MemoryRegion("XRAM",      0x000000, 0x10000),
 				new MemoryRegion("MMIO_USB",  0x010000, 0x10000),
@@ -135,7 +135,7 @@ public class ASMediaXhcMetadata {
 		),
 		Map.entry(
 			new ByteArrayKey("3308A_FW"),
-			new ChipMetadata("Promontory-19", List.of(
+			new FwChipMetadata("Promontory-19", List.of(
 				/* FIXME: Assumed layout, need to confirm on real hardware */
 				new MemoryRegion("XRAM",      0x000000, 0x10000),
 				new MemoryRegion("MMIO_USB",  0x010000, 0x10000),
@@ -144,7 +144,7 @@ public class ASMediaXhcMetadata {
 		),
 		Map.entry(
 			new ByteArrayKey("3328A_FW"),
-			new ChipMetadata("Promontory-21", List.of(
+			new FwChipMetadata("Promontory-21", List.of(
 				/* FIXME: Assumed size of XRAM, need to confirm on real hardware */
 				new MemoryRegion("XRAM",      0x000000, 0x10000),
 				new MemoryRegion("MMIO_USB",  0x010000, 0x10000),
@@ -154,13 +154,13 @@ public class ASMediaXhcMetadata {
 	);
 
 	/**
-	 * Returns the ChipMetadata for the given firmware platform ID bytes.
+	 * Returns the FwChipMetadata for the given firmware platform ID bytes.
 	 *
 	 * @param platformIdBytes the platform ID bytes to look up
-	 * @return the corresponding ChipMetadata, or the default if not found
+	 * @return the corresponding FwChipMetadata, or the default if not found
 	 */
-	public static ChipMetadata get(byte[] platformIdBytes) {
-		return CHIP_METADATA.getOrDefault(new ByteArrayKey(platformIdBytes), DEFAULT_CHIP_METADATA);
+	public static FwChipMetadata get(byte[] platformIdBytes) {
+		return FW_CHIP_METADATA.getOrDefault(new ByteArrayKey(platformIdBytes), DEFAULT_FW_CHIP_METADATA);
 	}
 
 	private static final Map<ByteArrayKey, Integer> HEADER_MAGIC_TO_CODE_LEN_SIZE = Map.ofEntries(
