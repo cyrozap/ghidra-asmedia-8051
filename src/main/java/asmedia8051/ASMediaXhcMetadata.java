@@ -163,10 +163,22 @@ public class ASMediaXhcMetadata {
 		return FW_CHIP_METADATA.getOrDefault(new ByteArrayKey(platformIdBytes), DEFAULT_FW_CHIP_METADATA);
 	}
 
-	private static final Map<ByteArrayKey, Integer> HEADER_MAGIC_TO_CODE_LEN_SIZE = Map.ofEntries(
-		Map.entry(new ByteArrayKey("U2104_RCFG"), 2),
-		Map.entry(new ByteArrayKey("2104B_RCFG"), 2),
-		Map.entry(new ByteArrayKey("2114A_RCFG"), 2)
+	/**
+	 * A record to hold chip metadata for ROM config (RCFG) firmware.
+	 *
+	 * @param name the name of the chip (e.g., "ASM1042", "Promontory")
+	 * @param codeLenSize the size in bytes used to represent the code length
+	 */
+	public record RcfgChipMetadata(String name, int codeLenSize) {}
+
+	private static final RcfgChipMetadata DEFAULT_RCFG_CHIP_METADATA = new RcfgChipMetadata("UNKNOWN", 4);
+
+	private static final Map<ByteArrayKey, RcfgChipMetadata> RCFG_CHIP_METADATA = Map.ofEntries(
+		Map.entry(new ByteArrayKey("U2104_RCFG"), new RcfgChipMetadata("ASM1042", 2)),
+		Map.entry(new ByteArrayKey("2104B_RCFG"), new RcfgChipMetadata("ASM1042A", 2)),
+		Map.entry(new ByteArrayKey("2114A_RCFG"), new RcfgChipMetadata("ASM1142", 2)),
+		Map.entry(new ByteArrayKey("2214A_RCFG"), new RcfgChipMetadata("ASM2142/ASM3142", 4)),
+		Map.entry(new ByteArrayKey("2324A_RCFG"), new RcfgChipMetadata("ASM3242", 4))
 	);
 
 	/**
@@ -177,7 +189,7 @@ public class ASMediaXhcMetadata {
 	 * @return the code length size
 	 */
 	public static int getCodeLenSize(byte[] platformIdBytes) {
-		return HEADER_MAGIC_TO_CODE_LEN_SIZE.getOrDefault(new ByteArrayKey(platformIdBytes), 4);
+		return RCFG_CHIP_METADATA.getOrDefault(new ByteArrayKey(platformIdBytes), DEFAULT_RCFG_CHIP_METADATA).codeLenSize();
 	}
 
 }
