@@ -82,7 +82,7 @@ public class ASMedia8051Loader extends AbstractProgramWrapperLoader {
 		String asciiString = ASMediaUtils.toAscii(headerMagic);
 		String hexString = ASMediaUtils.toHex(headerMagic);
 
-		log.appendMsg("Detected platform: " + asciiString + " (" + hexString + ")");
+		log.appendMsg("Platform detected from ROM config: " + asciiString + " (" + hexString + ")");
 
 		long codeLenSize = 4;
 		if (Arrays.equals(headerMagic, "U2104_RCFG".getBytes(StandardCharsets.US_ASCII)) ||
@@ -146,14 +146,23 @@ public class ASMedia8051Loader extends AbstractProgramWrapperLoader {
 				offsetInFile += chunkSize;
 			}
 
-			// Create the XRAM and MMIO blocks
-			MemoryBlock xram = mem.createUninitializedBlock("XRAM", api.toAddr("EXTMEM:0x000000"), 0x10000, false);
-			xram.setPermissions(true, true, false);
-			xram.setVolatile(true);  // We treat XRAM as volatile since it can be modified by DMA from peripherals.
+			// Read firmware platform ID
+			byte[] platformIdBytes = provider.readBytes(offset + 0x87, 8);
 
-			MemoryBlock mmio = mem.createUninitializedBlock("MMIO", api.toAddr("EXTMEM:0x010000"), 0x10000, false);
-			mmio.setPermissions(true, true, false);
-			mmio.setVolatile(true);
+			// Lookup chip metadata
+			ASMediaXhcMetadata.ChipMetadata metadata = ASMediaXhcMetadata.get(platformIdBytes);
+
+			// Tell the user what platform was detected
+			String platformIdString = ASMediaUtils.toAscii(platformIdBytes);
+			String platformIdHex = ASMediaUtils.toHex(platformIdBytes);
+			log.appendMsg("Platform detected from firmware: " + metadata.name() + " ( \"" + platformIdString + "\" / [" + platformIdHex + "] )");
+
+			// Load XRAM and MMIO blocks based on metadata
+			for (ASMediaXhcMetadata.MemoryRegion region : metadata.regions()) {
+				MemoryBlock block = mem.createUninitializedBlock(region.name(), api.toAddr("EXTMEM:0x" + Long.toHexString(region.baseAddress())), region.size(), false);
+				block.setPermissions(true, true, false);
+				block.setVolatile(true);
+			}
 
 		} catch (AddressOverflowException | LockException | MemoryConflictException e) {
 			throw new IOException(e);
