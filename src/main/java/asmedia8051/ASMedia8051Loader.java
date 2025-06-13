@@ -81,13 +81,12 @@ public class ASMedia8051Loader extends AbstractProgramWrapperLoader {
 
 		String asciiString = ASMediaUtils.toAscii(headerMagic);
 		String hexString = ASMediaUtils.toHex(headerMagic);
+		ASMediaXhcMetadata.RcfgChipMetadata rcfgMetadata = ASMediaXhcMetadata.getRcfgChipMetadata(headerMagic);
 
-		log.appendMsg("Platform detected from ROM config: " + asciiString + " (" + hexString + ")");
+		log.appendMsg("Platform detected from ROM config: " + rcfgMetadata.name() + " ( \"" + asciiString + "\" / [" + hexString + "] )");
 
-		long codeLenSize = ASMediaXhcMetadata.getCodeLenSize(headerMagic);
-
-		long codeLen = ASMediaUtils.littleEndianToLong(provider.readBytes(bodyOffset, codeLenSize));
-		long offset = bodyOffset + codeLenSize;
+		long codeLen = ASMediaUtils.littleEndianToLong(provider.readBytes(bodyOffset, rcfgMetadata.codeLenSize()));
+		long offset = bodyOffset + rcfgMetadata.codeLenSize();
 
 		loadRawBinary(provider, offset, codeLen, program, monitor, log);
 	}
@@ -145,7 +144,7 @@ public class ASMedia8051Loader extends AbstractProgramWrapperLoader {
 			byte[] platformIdBytes = provider.readBytes(offset + 0x87, 8);
 
 			// Lookup chip metadata
-			ASMediaXhcMetadata.FwChipMetadata metadata = ASMediaXhcMetadata.get(platformIdBytes);
+			ASMediaXhcMetadata.FwChipMetadata metadata = ASMediaXhcMetadata.getFwChipMetadata(platformIdBytes);
 
 			// Tell the user what platform was detected
 			String platformIdString = ASMediaUtils.toAscii(platformIdBytes);

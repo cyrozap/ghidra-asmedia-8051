@@ -159,7 +159,7 @@ public class ASMediaXhcMetadata {
 	 * @param platformIdBytes the platform ID bytes to look up
 	 * @return the corresponding FwChipMetadata, or the default if not found
 	 */
-	public static FwChipMetadata get(byte[] platformIdBytes) {
+	public static FwChipMetadata getFwChipMetadata(byte[] platformIdBytes) {
 		return FW_CHIP_METADATA.getOrDefault(new ByteArrayKey(platformIdBytes), DEFAULT_FW_CHIP_METADATA);
 	}
 
@@ -182,14 +182,14 @@ public class ASMediaXhcMetadata {
 	);
 
 	/**
-	 * Returns the code length size for the given ROM config platform ID bytes.
-	 * Defaults to 4 if no match is found.
+	 * Returns the RcfgChipMetadata for the given ROM config platform ID bytes.
+	 * Defaults to the unknown metadata if no match is found.
 	 *
 	 * @param platformIdBytes the platform ID bytes to look up
-	 * @return the code length size
+	 * @return the corresponding RcfgChipMetadata
 	 */
-	public static int getCodeLenSize(byte[] platformIdBytes) {
-		return RCFG_CHIP_METADATA.getOrDefault(new ByteArrayKey(platformIdBytes), DEFAULT_RCFG_CHIP_METADATA).codeLenSize();
+	public static RcfgChipMetadata getRcfgChipMetadata(byte[] platformIdBytes) {
+		return RCFG_CHIP_METADATA.getOrDefault(new ByteArrayKey(platformIdBytes), DEFAULT_RCFG_CHIP_METADATA);
 	}
 
 }
