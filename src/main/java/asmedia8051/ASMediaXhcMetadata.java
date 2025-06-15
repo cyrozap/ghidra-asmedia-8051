@@ -118,28 +118,25 @@ public class ASMediaXhcMetadata {
 		Map.entry(
 			new ByteArrayKey("3306A_FW"),
 			new FwChipMetadata("Promontory", List.of(
-				/* FIXME: Assumed layout, need to confirm on real hardware */
-				new MemoryRegion("XRAM",      0x000000, 0x10000),
-				new MemoryRegion("MMIO_USB",  0x010000, 0x10000),
-				new MemoryRegion("MMIO_SATA", 0x020000, 0x10000)
+				/* FIXME: Assumed size of XRAM, need to confirm on real hardware */
+				new MemoryRegion("XRAM", 0x000000, 0x10000),
+				new MemoryRegion("MMIO", 0x010000, 0x10000)
 			))
 		),
 		Map.entry(
 			new ByteArrayKey("3306B_FW"),
 			new FwChipMetadata("Promontory-LP", List.of(
-				/* FIXME: Assumed layout, need to confirm on real hardware */
-				new MemoryRegion("XRAM",      0x000000, 0x10000),
-				new MemoryRegion("MMIO_USB",  0x010000, 0x10000),
-				new MemoryRegion("MMIO_SATA", 0x020000, 0x10000)
+				/* FIXME: Assumed size of XRAM, need to confirm on real hardware */
+				new MemoryRegion("XRAM", 0x000000, 0x10000),
+				new MemoryRegion("MMIO", 0x010000, 0x10000)
 			))
 		),
 		Map.entry(
 			new ByteArrayKey("3308A_FW"),
 			new FwChipMetadata("Promontory-19", List.of(
-				/* FIXME: Assumed layout, need to confirm on real hardware */
-				new MemoryRegion("XRAM",      0x000000, 0x10000),
-				new MemoryRegion("MMIO_USB",  0x010000, 0x10000),
-				new MemoryRegion("MMIO_SATA", 0x020000, 0x10000)
+				/* FIXME: Assumed size of XRAM, need to confirm on real hardware */
+				new MemoryRegion("XRAM", 0x000000, 0x10000),
+				new MemoryRegion("MMIO", 0x010000, 0x10000)
 			))
 		),
 		Map.entry(
