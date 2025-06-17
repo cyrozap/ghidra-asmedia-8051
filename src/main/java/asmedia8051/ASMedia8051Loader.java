@@ -89,7 +89,7 @@ public class ASMedia8051Loader extends AbstractProgramWrapperLoader {
 		long codeLen = ASMediaUtils.littleEndianToLong(provider.readBytes(bodyOffset, rcfgMetadata.codeLenSize()));
 		long offset = bodyOffset + rcfgMetadata.codeLenSize();
 
-		loadRawBinary(provider, offset, codeLen, program, monitor, log);
+		loadRawBinary(provider, offset, codeLen, type, program, monitor, log);
 	}
 
 	private void loadPromontoryImage(ByteProvider provider, Program program, TaskMonitor monitor, MessageLog log)
@@ -97,15 +97,15 @@ public class ASMedia8051Loader extends AbstractProgramWrapperLoader {
 		long bodyLen = ASMediaUtils.littleEndianToLong(provider.readBytes(4, 4)) - 12;
 		long codeLen = bodyLen - (bodyLen & 0xff);  // Exclude the signature, if present
 
-		loadRawBinary(provider, 12, codeLen, program, monitor, log);
+		loadRawBinary(provider, 12, codeLen, ASMediaXhcType.UNKNOWN, program, monitor, log);
 	}
 
 	private void loadRawBinary(ByteProvider provider, Program program, TaskMonitor monitor, MessageLog log)
 			throws CancelledException, IOException {
-		loadRawBinary(provider, 0, provider.length(), program, monitor, log);
+		loadRawBinary(provider, 0, provider.length(), ASMediaXhcType.UNKNOWN, program, monitor, log);
 	}
 
-	private void loadRawBinary(ByteProvider provider, long offset, long length,
+	private void loadRawBinary(ByteProvider provider, long offset, long length, ASMediaXhcType identifiedType,
 			Program program, TaskMonitor monitor, MessageLog log) throws CancelledException, IOException {
 		Memory mem = program.getMemory();
 		FlatProgramAPI api = new FlatProgramAPI(program);
@@ -141,16 +141,19 @@ public class ASMedia8051Loader extends AbstractProgramWrapperLoader {
 				offsetInFile += chunkSize;
 			}
 
-			// Read firmware platform ID
-			byte[] platformIdBytes = provider.readBytes(offset + 0x87, 8);
+			ASMediaXhcType type = identifiedType;
+			if (type == ASMediaXhcType.UNKNOWN) {
+				// Read firmware platform ID
+				byte[] platformIdBytes = provider.readBytes(offset + 0x87, 8);
 
-			// Get the chip type from the firmware platform ID
-			ASMediaXhcType type = ASMediaXhcType.getFromFwPlatformId(platformIdBytes);
+				// Get the chip type from the firmware platform ID
+				type = ASMediaXhcType.getFromFwPlatformId(platformIdBytes);
 
-			// Tell the user what platform was detected
-			String platformIdString = ASMediaUtils.toAscii(platformIdBytes);
-			String platformIdHex = ASMediaUtils.toHex(platformIdBytes);
-			log.appendMsg("Platform detected from firmware: " + type.toString() + " ( \"" + platformIdString + "\" / [" + platformIdHex + "] )");
+				// Tell the user what platform was detected
+				String platformIdString = ASMediaUtils.toAscii(platformIdBytes);
+				String platformIdHex = ASMediaUtils.toHex(platformIdBytes);
+				log.appendMsg("Platform detected from firmware: " + type.toString() + " ( \"" + platformIdString + "\" / [" + platformIdHex + "] )");
+			}
 
 			// Lookup chip metadata
 			ASMediaXhcMetadata.FwChipMetadata metadata = ASMediaXhcMetadata.getFwChipMetadata(type);
