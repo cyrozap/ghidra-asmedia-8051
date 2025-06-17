@@ -82,10 +82,10 @@ public class ASMedia8051Loader extends AbstractProgramWrapperLoader {
 		String asciiString = ASMediaUtils.toAscii(headerMagic);
 		String hexString = ASMediaUtils.toHex(headerMagic);
 		ASMediaXhcType type = ASMediaXhcType.getFromRcfgPlatformId(headerMagic);
-		ASMediaXhcMetadata.RcfgChipMetadata rcfgMetadata = ASMediaXhcMetadata.getRcfgChipMetadata(type);
 
 		log.appendMsg("Platform detected from ROM config: " + type.toString() + " ( \"" + asciiString + "\" / [" + hexString + "] )");
 
+		ASMediaXhcMetadata.RcfgChipMetadata rcfgMetadata = ASMediaXhcMetadata.getRcfgChipMetadata(type);
 		long codeLen = ASMediaUtils.littleEndianToLong(provider.readBytes(bodyOffset, rcfgMetadata.codeLenSize()));
 		long offset = bodyOffset + rcfgMetadata.codeLenSize();
 
@@ -144,14 +144,16 @@ public class ASMedia8051Loader extends AbstractProgramWrapperLoader {
 			// Read firmware platform ID
 			byte[] platformIdBytes = provider.readBytes(offset + 0x87, 8);
 
-			// Lookup chip metadata
+			// Get the chip type from the firmware platform ID
 			ASMediaXhcType type = ASMediaXhcType.getFromFwPlatformId(platformIdBytes);
-			ASMediaXhcMetadata.FwChipMetadata metadata = ASMediaXhcMetadata.getFwChipMetadata(type);
 
 			// Tell the user what platform was detected
 			String platformIdString = ASMediaUtils.toAscii(platformIdBytes);
 			String platformIdHex = ASMediaUtils.toHex(platformIdBytes);
 			log.appendMsg("Platform detected from firmware: " + type.toString() + " ( \"" + platformIdString + "\" / [" + platformIdHex + "] )");
+
+			// Lookup chip metadata
+			ASMediaXhcMetadata.FwChipMetadata metadata = ASMediaXhcMetadata.getFwChipMetadata(type);
 
 			// Load XRAM and MMIO blocks based on metadata
 			for (ASMediaXhcMetadata.MemoryRegion region : metadata.regions()) {
