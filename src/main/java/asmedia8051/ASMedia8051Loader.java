@@ -130,7 +130,7 @@ public class ASMedia8051Loader extends AbstractProgramWrapperLoader {
 				bankCount += 1;
 			}
 			long offsetInFile = firstChunkSize;
-			for(int i = 0; i < bankCount; i++) {
+			for (int i = 0; i < bankCount; i++) {
 				int chunkSize = Math.min(0x4000, (int)(fileSize - offsetInFile));
 
 				MemoryBlock bank = mem.createInitializedBlock("BANK_" + i, api.toAddr("CODE:0xC000"),
