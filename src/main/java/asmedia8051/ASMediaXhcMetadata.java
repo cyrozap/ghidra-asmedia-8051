@@ -100,13 +100,12 @@ public class ASMediaXhcMetadata {
 	);
 
 	/**
-	 * Returns the FwChipMetadata for the given firmware platform ID bytes.
+	 * Returns the FwChipMetadata for the given ASMedia xHC type.
 	 *
-	 * @param platformIdBytes the platform ID bytes to look up
+	 * @param type the ASMedia xHC type to look up
 	 * @return the corresponding FwChipMetadata, or the default if not found
 	 */
-	public static FwChipMetadata getFwChipMetadata(byte[] platformIdBytes) {
-		ASMediaXhcType type = ASMediaXhcType.getFromFwPlatformId(platformIdBytes);
+	public static FwChipMetadata getFwChipMetadata(ASMediaXhcType type) {
 		return FW_CHIP_METADATA.getOrDefault(type, DEFAULT_FW_CHIP_METADATA);
 	}
 
@@ -129,14 +128,13 @@ public class ASMediaXhcMetadata {
 	);
 
 	/**
-	 * Returns the RcfgChipMetadata for the given ROM config platform ID bytes.
+	 * Returns the RcfgChipMetadata for the given ASMedia xHC type.
 	 * Defaults to the unknown metadata if no match is found.
 	 *
-	 * @param platformIdBytes the platform ID bytes to look up
+	 * @param type the ASMedia xHC type to look up
 	 * @return the corresponding RcfgChipMetadata
 	 */
-	public static RcfgChipMetadata getRcfgChipMetadata(byte[] platformIdBytes) {
-		ASMediaXhcType type = ASMediaXhcType.getFromRcfgPlatformId(platformIdBytes);
+	public static RcfgChipMetadata getRcfgChipMetadata(ASMediaXhcType type) {
 		return RCFG_CHIP_METADATA.getOrDefault(type, DEFAULT_RCFG_CHIP_METADATA);
 	}
 

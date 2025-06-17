@@ -81,7 +81,8 @@ public class ASMedia8051Loader extends AbstractProgramWrapperLoader {
 
 		String asciiString = ASMediaUtils.toAscii(headerMagic);
 		String hexString = ASMediaUtils.toHex(headerMagic);
-		ASMediaXhcMetadata.RcfgChipMetadata rcfgMetadata = ASMediaXhcMetadata.getRcfgChipMetadata(headerMagic);
+		ASMediaXhcType type = ASMediaXhcType.getFromRcfgPlatformId(headerMagic);
+		ASMediaXhcMetadata.RcfgChipMetadata rcfgMetadata = ASMediaXhcMetadata.getRcfgChipMetadata(type);
 
 		log.appendMsg("Platform detected from ROM config: " + rcfgMetadata.name() + " ( \"" + asciiString + "\" / [" + hexString + "] )");
 
@@ -144,7 +145,8 @@ public class ASMedia8051Loader extends AbstractProgramWrapperLoader {
 			byte[] platformIdBytes = provider.readBytes(offset + 0x87, 8);
 
 			// Lookup chip metadata
-			ASMediaXhcMetadata.FwChipMetadata metadata = ASMediaXhcMetadata.getFwChipMetadata(platformIdBytes);
+			ASMediaXhcType type = ASMediaXhcType.getFromFwPlatformId(platformIdBytes);
+			ASMediaXhcMetadata.FwChipMetadata metadata = ASMediaXhcMetadata.getFwChipMetadata(type);
 
 			// Tell the user what platform was detected
 			String platformIdString = ASMediaUtils.toAscii(platformIdBytes);
