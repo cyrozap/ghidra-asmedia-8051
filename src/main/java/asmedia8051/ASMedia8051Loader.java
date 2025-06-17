@@ -84,7 +84,7 @@ public class ASMedia8051Loader extends AbstractProgramWrapperLoader {
 		ASMediaXhcType type = ASMediaXhcType.getFromRcfgPlatformId(headerMagic);
 		ASMediaXhcMetadata.RcfgChipMetadata rcfgMetadata = ASMediaXhcMetadata.getRcfgChipMetadata(type);
 
-		log.appendMsg("Platform detected from ROM config: " + rcfgMetadata.name() + " ( \"" + asciiString + "\" / [" + hexString + "] )");
+		log.appendMsg("Platform detected from ROM config: " + type.toString() + " ( \"" + asciiString + "\" / [" + hexString + "] )");
 
 		long codeLen = ASMediaUtils.littleEndianToLong(provider.readBytes(bodyOffset, rcfgMetadata.codeLenSize()));
 		long offset = bodyOffset + rcfgMetadata.codeLenSize();
@@ -151,7 +151,7 @@ public class ASMedia8051Loader extends AbstractProgramWrapperLoader {
 			// Tell the user what platform was detected
 			String platformIdString = ASMediaUtils.toAscii(platformIdBytes);
 			String platformIdHex = ASMediaUtils.toHex(platformIdBytes);
-			log.appendMsg("Platform detected from firmware: " + metadata.name() + " ( \"" + platformIdString + "\" / [" + platformIdHex + "] )");
+			log.appendMsg("Platform detected from firmware: " + type.toString() + " ( \"" + platformIdString + "\" / [" + platformIdHex + "] )");
 
 			// Load XRAM and MMIO blocks based on metadata
 			for (ASMediaXhcMetadata.MemoryRegion region : metadata.regions()) {

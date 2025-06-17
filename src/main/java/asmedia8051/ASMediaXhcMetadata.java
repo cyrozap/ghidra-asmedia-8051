@@ -32,10 +32,9 @@ public class ASMediaXhcMetadata {
 	/**
 	 * Metadata describing a specific chip, including its name and associated memory regions.
 	 *
-	 * @param name the name of the chip (e.g., "ASM1042", "Promontory")
 	 * @param regions a list of memory regions defined for this chip
 	 */
-	public record FwChipMetadata(String name, List<MemoryRegion> regions) {}
+	public record FwChipMetadata(List<MemoryRegion> regions) {}
 
 	/**
 	 * Represents a memory region with a name, base address, and size.
@@ -46,52 +45,49 @@ public class ASMediaXhcMetadata {
 	 */
 	public record MemoryRegion(String name, long baseAddress, long size) {}
 
-	private static final FwChipMetadata DEFAULT_FW_CHIP_METADATA = new FwChipMetadata(
-		"UNKNOWN",
-		List.of(
-			new MemoryRegion("XRAM", 0x000000, 0x10000),
-			new MemoryRegion("MMIO", 0x010000, 0x10000)
-		)
-	);
+	private static final FwChipMetadata DEFAULT_FW_CHIP_METADATA = new FwChipMetadata(List.of(
+		new MemoryRegion("XRAM", 0x000000, 0x10000),
+		new MemoryRegion("MMIO", 0x010000, 0x10000)
+	));
 
 	private static final Map<ASMediaXhcType, FwChipMetadata> FW_CHIP_METADATA = Map.ofEntries(
-		Map.entry(ASMediaXhcType.ASM1042, new FwChipMetadata("ASM1042", List.of(
+		Map.entry(ASMediaXhcType.ASM1042, new FwChipMetadata(List.of(
 			new MemoryRegion("XRAM", 0x0000, 0xC000),
 			new MemoryRegion("MMIO", 0xE000, 0x2000)
 		))),
-		Map.entry(ASMediaXhcType.ASM1042A, new FwChipMetadata("ASM1042A", List.of(
+		Map.entry(ASMediaXhcType.ASM1042A, new FwChipMetadata(List.of(
 			new MemoryRegion("XRAM", 0x0000, 0xC000),
 			new MemoryRegion("MMIO", 0xE000, 0x2000)
 		))),
-		Map.entry(ASMediaXhcType.ASM1142, new FwChipMetadata("ASM1142", List.of(
+		Map.entry(ASMediaXhcType.ASM1142, new FwChipMetadata(List.of(
 			new MemoryRegion("XRAM", 0x0000, 0xC000),
 			new MemoryRegion("MMIO", 0xE000, 0x2000)
 		))),
-		Map.entry(ASMediaXhcType.ASM2142_ASM3142, new FwChipMetadata("ASM2142/ASM3142", List.of(
+		Map.entry(ASMediaXhcType.ASM2142_ASM3142, new FwChipMetadata(List.of(
 			new MemoryRegion("XRAM", 0x000000, 0x0C000),
 			new MemoryRegion("MMIO", 0x010000, 0x10000)
 		))),
-		Map.entry(ASMediaXhcType.ASM3242, new FwChipMetadata("ASM3242", List.of(
+		Map.entry(ASMediaXhcType.ASM3242, new FwChipMetadata(List.of(
 			/* FIXME: Assumed size of XRAM, need to confirm on real hardware */
 			new MemoryRegion("XRAM", 0x000000, 0x10000),
 			new MemoryRegion("MMIO", 0x010000, 0x10000)
 		))),
-		Map.entry(ASMediaXhcType.PROM, new FwChipMetadata("Promontory", List.of(
+		Map.entry(ASMediaXhcType.PROM, new FwChipMetadata(List.of(
 			/* FIXME: Assumed size of XRAM, need to confirm on real hardware */
 			new MemoryRegion("XRAM", 0x000000, 0x10000),
 			new MemoryRegion("MMIO", 0x010000, 0x10000)
 		))),
-		Map.entry(ASMediaXhcType.PROM_LP, new FwChipMetadata("Promontory-LP", List.of(
+		Map.entry(ASMediaXhcType.PROM_LP, new FwChipMetadata(List.of(
 			/* FIXME: Assumed size of XRAM, need to confirm on real hardware */
 			new MemoryRegion("XRAM", 0x000000, 0x10000),
 			new MemoryRegion("MMIO", 0x010000, 0x10000)
 		))),
-		Map.entry(ASMediaXhcType.PROM_19, new FwChipMetadata("Promontory-19", List.of(
+		Map.entry(ASMediaXhcType.PROM_19, new FwChipMetadata(List.of(
 			/* FIXME: Assumed size of XRAM, need to confirm on real hardware */
 			new MemoryRegion("XRAM", 0x000000, 0x10000),
 			new MemoryRegion("MMIO", 0x010000, 0x10000)
 		))),
-		Map.entry(ASMediaXhcType.PROM_21, new FwChipMetadata("Promontory-21", List.of(
+		Map.entry(ASMediaXhcType.PROM_21, new FwChipMetadata(List.of(
 			/* FIXME: Assumed size of XRAM, need to confirm on real hardware */
 			new MemoryRegion("XRAM",      0x000000, 0x10000),
 			new MemoryRegion("MMIO_USB",  0x010000, 0x10000),
@@ -112,19 +108,18 @@ public class ASMediaXhcMetadata {
 	/**
 	 * A record to hold chip metadata for ROM config (RCFG) firmware.
 	 *
-	 * @param name the name of the chip (e.g., "ASM1042", "Promontory")
 	 * @param codeLenSize the size in bytes used to represent the code length
 	 */
-	public record RcfgChipMetadata(String name, int codeLenSize) {}
+	public record RcfgChipMetadata(int codeLenSize) {}
 
-	private static final RcfgChipMetadata DEFAULT_RCFG_CHIP_METADATA = new RcfgChipMetadata("UNKNOWN", 4);
+	private static final RcfgChipMetadata DEFAULT_RCFG_CHIP_METADATA = new RcfgChipMetadata(4);
 
 	private static final Map<ASMediaXhcType, RcfgChipMetadata> RCFG_CHIP_METADATA = Map.ofEntries(
-		Map.entry(ASMediaXhcType.ASM1042, new RcfgChipMetadata("ASM1042", 2)),
-		Map.entry(ASMediaXhcType.ASM1042A, new RcfgChipMetadata("ASM1042A", 2)),
-		Map.entry(ASMediaXhcType.ASM1142, new RcfgChipMetadata("ASM1142", 2)),
-		Map.entry(ASMediaXhcType.ASM2142_ASM3142, new RcfgChipMetadata("ASM2142/ASM3142", 4)),
-		Map.entry(ASMediaXhcType.ASM3242, new RcfgChipMetadata("ASM3242", 4))
+		Map.entry(ASMediaXhcType.ASM1042, new RcfgChipMetadata(2)),
+		Map.entry(ASMediaXhcType.ASM1042A, new RcfgChipMetadata(2)),
+		Map.entry(ASMediaXhcType.ASM1142, new RcfgChipMetadata(2)),
+		Map.entry(ASMediaXhcType.ASM2142_ASM3142, new RcfgChipMetadata(4)),
+		Map.entry(ASMediaXhcType.ASM3242, new RcfgChipMetadata(4))
 	);
 
 	/**
