@@ -29,30 +29,6 @@ import java.util.Map;
  */
 public class ASMediaXhcMetadata {
 
-	private static final class ByteArrayKey {
-		private final byte[] value;
-
-		private ByteArrayKey(byte[] value) {
-			this.value = value;
-		}
-
-		private ByteArrayKey(String value) {
-			this(value.getBytes(StandardCharsets.US_ASCII));
-		}
-
-		@Override
-		public boolean equals(Object o) {
-			if (this == o) return true;
-			if (!(o instanceof ByteArrayKey)) return false;
-			return Arrays.equals(value, ((ByteArrayKey) o).value);
-		}
-
-		@Override
-		public int hashCode() {
-			return Arrays.hashCode(value);
-		}
-	}
-
 	/**
 	 * Metadata describing a specific chip, including its name and associated memory regions.
 	 *
