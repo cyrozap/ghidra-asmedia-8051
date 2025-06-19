@@ -25,15 +25,54 @@ import java.util.Map;
  * Provides methods to identify chip types based on firmware or ROM config platform ID bytes.
  */
 public enum ASMediaXhcType {
+	/**
+	 * Represents the ASMedia ASM1042 xHC chip.
+	 */
 	ASM1042("ASM1042"),
+
+	/**
+	 * Represents the ASMedia ASM1042A xHC chip.
+	 */
 	ASM1042A("ASM1042A"),
+
+	/**
+	 * Represents the ASMedia ASM1142 xHC chip.
+	 */
 	ASM1142("ASM1142"),
+
+	/**
+	 * Represents the ASMedia ASM2142/ASM3142 xHC chip.
+	 */
 	ASM2142_ASM3142("ASM2142/ASM3142"),
+
+	/**
+	 * Represents the ASMedia ASM3242 xHC chip.
+	 */
 	ASM3242("ASM3242"),
+
+	/**
+	 * Represents the original Promontory chip.
+	 */
 	PROM("Promontory"),
+
+	/**
+	 * Represents the Promontory-LP chip.
+	 */
 	PROM_LP("Promontory-LP"),
+
+	/**
+	 * Represents the Promontory-19 chip.
+	 */
 	PROM_19("Promontory-19"),
+
+	/**
+	 * Represents the Promontory-21 chip.
+	 */
 	PROM_21("Promontory-21"),
+
+	/**
+	 * Represents an unknown or unlisted chip type.
+	 */
 	UNKNOWN("Unknown");
 
 	private final String name;
