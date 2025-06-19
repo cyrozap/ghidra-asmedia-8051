@@ -69,6 +69,9 @@ public enum ASMediaXhcType {
 
 	/**
 	 * Returns the ASMediaXhcType based on firmware platform ID bytes.
+	 *
+	 * @param platformIdBytes the byte array representing the firmware platform ID
+	 * @return the corresponding ASMediaXhcType, or UNKNOWN if no match is found
 	 */
 	public static ASMediaXhcType getFromFwPlatformId(byte[] platformIdBytes) {
 		return FW_MAP.getOrDefault(new ByteArrayKey(platformIdBytes), UNKNOWN);
@@ -76,6 +79,9 @@ public enum ASMediaXhcType {
 
 	/**
 	 * Returns the ASMediaXhcType based on ROM config platform ID bytes.
+	 *
+	 * @param platformIdBytes the byte array representing the ROM config platform ID
+	 * @return the corresponding ASMediaXhcType, or UNKNOWN if no match is found
 	 */
 	public static ASMediaXhcType getFromRcfgPlatformId(byte[] platformIdBytes) {
 		return RCFG_MAP.getOrDefault(new ByteArrayKey(platformIdBytes), UNKNOWN);
