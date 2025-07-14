@@ -19,7 +19,6 @@
 package asmedia8051;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -177,13 +176,13 @@ public class ASMedia8051Loader extends AbstractProgramWrapperLoader {
 		boolean hasPromontoryMagic = false;
 		if (provider.length() >= 4) {
 			byte[] pt_magic = provider.readBytes(0, 4);
-			hasPromontoryMagic = Arrays.equals(pt_magic, "_PT_".getBytes(StandardCharsets.US_ASCII));
+			hasPromontoryMagic = Arrays.equals(pt_magic, ASMediaUtils.toBytes("_PT_"));
 		}
 
 		boolean hasRcfgMagic = false;
 		if (provider.length() >= 16) {
 			byte[] rcfg_magic = provider.readBytes(11, 5);
-			hasRcfgMagic = Arrays.equals(rcfg_magic, "_RCFG".getBytes(StandardCharsets.US_ASCII));
+			hasRcfgMagic = Arrays.equals(rcfg_magic, ASMediaUtils.toBytes("_RCFG"));
 		}
 
 		ASMediaFirmwareType firmwareType = OptionUtils.getOption(FIRMWARE_TYPE_OPTION_NAME, options, FIRMWARE_TYPE_OPTION_DEFAULT);

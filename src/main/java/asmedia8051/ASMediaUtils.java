@@ -18,8 +18,12 @@
 
 package asmedia8051;
 
+import java.nio.charset.StandardCharsets;
+
 /**
- * Utility class for common operations such as byte array conversion to ASCII, hex, and little-endian longs.
+ * Utility class providing common methods for handling byte arrays and string conversions.
+ * Includes functionality for converting byte arrays to ASCII strings, hexadecimal strings,
+ * little-endian longs, and converting strings to byte arrays using US-ASCII encoding.
  */
 public class ASMediaUtils {
 
@@ -73,5 +77,15 @@ public class ASMediaUtils {
 		}
 		String hexString = hexBuilder.toString().trim();
 		return hexString;
+	}
+
+	/**
+	 * Converts a string to a byte array using the US-ASCII character encoding.
+	 *
+	 * @param str the string to convert
+	 * @return the byte array representation of the string in US-ASCII
+	 */
+	public static byte[] toBytes(String str) {
+		return str.getBytes(StandardCharsets.US_ASCII);
 	}
 }
