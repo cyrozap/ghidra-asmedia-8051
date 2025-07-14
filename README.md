@@ -5,7 +5,7 @@ This processor module is an attempt at making it easier to disassemble and decom
 
 > [!CAUTION]
 > This module is a work-in-progress and has not gone through any rigorous testing.
-> In particular, the behavior of the CODE bank switching needs to be verified against real hadware, and the binary loader is not yet able to handle different firmware image types (raw binary vs. flash image) or allow the user to specify the chip type (bank-switched vs. non-bank-switched).
+> In particular, the behavior of the CODE bank switching needs to be verified against real hadware, and the binary loader is not yet able to handle USB-to-NVMe bridge firmware images.
 
 Target features of this processor module include:
 
