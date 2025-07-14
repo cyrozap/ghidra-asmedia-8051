@@ -34,7 +34,3 @@ Target features of this processor module include:
   - [ ] Identification of function signatures (switch-case, banked function calls)
   - [ ] Recognition of 32-bit constant loads and multi-byte arithmetic
   - [ ] P-Code emulation helper for complex code constructs
-
-Known issues:
-
-- LJMP / LCALL appear to ignore the value of PSBANK, even when set manually, and seem to want to jump back to the common bank.
