@@ -11,7 +11,11 @@ Target features of this processor module include:
 
 - Custom SLEIGH specification:
   - [x] Support expanded CODE and XDATA address spaces through handling of the `DPX` and `PSBANK` SFRs.
-  - [ ] Custom P-Code operations to enable the analyzer to handle complex firmware-based operations
+  - [ ] Custom P-Code opcodes to enable the analyzer to handle complex firmware-based operations
+    - [ ] 32-bit literal load (USB-to-NVMe bridge only, also needs to fix control flow to jump over the literal value)
+    - [ ] Switch-case sequences?
+    - [ ] Banked call?
+    - [ ] Multi-byte arithmetic and loads/stores?
 - Firmware image loader:
   - [ ] Support for raw code binaries and full images with headers:
     - [x] xHC firmware images (ASM1042, ASM1042A, ASM1142, ASM2142/ASM3142, ASM3242, etc.)
