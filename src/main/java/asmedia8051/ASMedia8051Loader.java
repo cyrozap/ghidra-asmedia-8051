@@ -169,9 +169,12 @@ public class ASMedia8051Loader extends AbstractProgramWrapperLoader {
 	}
 
 	@Override
-	protected void load(ByteProvider provider, LoadSpec loadSpec, List<Option> options,
-			Program program, TaskMonitor monitor, MessageLog log)
+	protected void load(Program program, ImporterSettings settings)
 			throws CancelledException, IOException {
+		ByteProvider provider = settings.provider();
+		TaskMonitor monitor = settings.monitor();
+		MessageLog log = settings.log();
+
 		boolean hasPromontoryMagic = false;
 		if (provider.length() >= 4) {
 			byte[] pt_magic = provider.readBytes(0, 4);
@@ -184,7 +187,7 @@ public class ASMedia8051Loader extends AbstractProgramWrapperLoader {
 			hasRcfgMagic = Arrays.equals(rcfg_magic, ASMediaUtils.toBytes("_RCFG"));
 		}
 
-		ASMediaFirmwareType firmwareType = OptionUtils.getOption(FIRMWARE_TYPE_OPTION_NAME, options, FIRMWARE_TYPE_OPTION_DEFAULT);
+		ASMediaFirmwareType firmwareType = OptionUtils.getOption(FIRMWARE_TYPE_OPTION_NAME, settings.options(), FIRMWARE_TYPE_OPTION_DEFAULT);
 		switch (firmwareType) {
 			case ASMediaFirmwareType.AUTO, ASMediaFirmwareType.IMAGE -> {
 				if (hasPromontoryMagic) {
@@ -210,9 +213,9 @@ public class ASMedia8051Loader extends AbstractProgramWrapperLoader {
 
 	@Override
 	public List<Option> getDefaultOptions(ByteProvider provider, LoadSpec loadSpec,
-			DomainObject domainObject, boolean isLoadIntoProgram) {
+			DomainObject domainObject, boolean loadIntoProgram, boolean mirrorFsLayout) {
 		List<Option> list =
-			super.getDefaultOptions(provider, loadSpec, domainObject, isLoadIntoProgram);
+			super.getDefaultOptions(provider, loadSpec, domainObject, loadIntoProgram, mirrorFsLayout);
 
 		list.add(new ASMediaFirmwareTypeOption(FIRMWARE_TYPE_OPTION_NAME, FIRMWARE_TYPE_OPTION_DEFAULT,
 			Loader.COMMAND_LINE_ARG_PREFIX + "-firmwareType"));
